@@ -173,7 +173,7 @@ function switchTab(key) {
 /**
  * 点击 marker
  */
-function handleMarkerTap(e: any) {
+function handleMarkerTap(e) {
   const markerId = e.markerId || e.detail?.markerId
   const places = getFilteredPlaces(activeTab.value)
   if (markerId !== undefined && places[markerId]) {
@@ -208,7 +208,7 @@ function resetView() {
 /**
  * 导航到地点
  */
-function navigateTo(place: any) {
+function navigateTo(place) {
   openNavigation(place.latitude, place.longitude, place.name)
 }
 

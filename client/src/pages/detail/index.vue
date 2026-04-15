@@ -197,7 +197,7 @@ onLoad((options) => {
 /**
  * 显示地点详情弹窗
  */
-function showPlaceDetail(place: any) {
+function showPlaceDetail(place) {
   selectedPlace.value = place
   detailPopup.value?.open()
 }
@@ -205,7 +205,7 @@ function showPlaceDetail(place: any) {
 /**
  * 导航到地点
  */
-function navigateTo(place: any) {
+function navigateTo(place) {
   detailPopup.value?.close()
   openNavigation(place.latitude, place.longitude, place.name)
 }
@@ -213,7 +213,7 @@ function navigateTo(place: any) {
 /**
  * 加入行程
  */
-async function addToTrip(place: any) {
+async function addToTrip(place) {
   try {
     await addTripPlace(tripStore.tripId, place)
     uni.showToast({ title: '已加入行程', icon: 'success' })

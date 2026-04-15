@@ -152,7 +152,7 @@ onLoad(async (options) => {
 /**
  * 编辑字段
  */
-function editField(field: any) {
+function editField(field) {
   editingField.value = field
   editValue.value = tripStore.plan[field.key] || ''
   editPopup.value?.open()
