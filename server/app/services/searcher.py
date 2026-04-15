@@ -94,7 +94,7 @@ class SearcherService:
         keywords = []
 
         # 综合攻略
-        keywords.append(f"{dest} {days}天自由行攻略 2025")
+        keywords.append(f"{dest} {days}天自由行攻略")
 
         # 景点推荐
         if interests:
@@ -236,17 +236,14 @@ class SearcherService:
 
         # 并发搜索
         search_results = {}
-        async with httpx.AsyncClient(timeout=15.0) as client:
-            tasks = []
-            for kw in keywords:
-                tasks.append(self._search_serper(kw))
-            # 逐个执行（避免并发过多）
-            for i, kw in enumerate(keywords):
-                try:
-                    results = await self._search_serper(kw)
-                    search_results[kw] = results
-                except Exception as e:
-                    search_results[kw] = [{"title": "搜索失败", "snippet": str(e), "link": ""}]
+        import asyncio
+        tasks = [self._search_serper(kw) for kw in keywords]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+        for kw, result in zip(keywords, results):
+            if isinstance(result, Exception):
+                search_results[kw] = [{"title": "搜索失败", "snippet": str(result), "link": ""}]
+            else:
+                search_results[kw] = result
 
         # AI 总结
         result = await self._summarize_with_ai(plan, search_results)

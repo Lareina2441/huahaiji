@@ -1,17 +1,29 @@
 """
 花海纪 - FastAPI 应用入口
 """
+from contextlib import asynccontextmanager
 import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.config import get_settings
+from app.database import init_db, close_db
 
 # 导入路由
 from app.routers import chat, search, map, trip
 
 settings = get_settings()
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """应用生命周期管理：启动时初始化数据库，关闭时释放连接"""
+    # 启动
+    await init_db()
+    yield
+    # 关闭
+    await close_db()
 
 
 def create_app() -> FastAPI:
@@ -23,6 +35,7 @@ def create_app() -> FastAPI:
         description="花海纪 - AI 智能旅行规划助手后端服务",
         docs_url="/docs" if settings.DEBUG else None,
         redoc_url="/redoc" if settings.DEBUG else None,
+        lifespan=lifespan,
     )
 
     # ---------- 中间件 ----------

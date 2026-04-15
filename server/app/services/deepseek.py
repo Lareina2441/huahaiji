@@ -139,8 +139,19 @@ class DeepSeekService:
         """
         reply = await self.chat(user_message, chat_history)
 
-        # 简单判断：如果回复中包含确认格式的总结，认为信息完整
-        is_complete = "请确认以上信息" in reply or "帮你整理" in reply
+        # 通过抽取服务判断信息完整度（更可靠）
+        is_complete = False
+        try:
+            from app.services.extractor import extractor_service
+            full_history = list(chat_history or [])
+            full_history.append({"role": "user", "content": user_message})
+            full_history.append({"role": "assistant", "content": reply})
+            trip_plan = await extractor_service.extract_trip_plan(full_history)
+            completeness = extractor_service.check_info_completeness(trip_plan)
+            is_complete = completeness["is_complete"]
+        except Exception:
+            # 降级：简单关键词匹配
+            is_complete = "请确认以上信息" in reply or "帮你整理" in reply
 
         return {
             "reply": reply,
