@@ -30,8 +30,7 @@
       }
     },
     "requiredPrivateInfos": [
-      "getLocation",
-      "openLocation"
+      "getLocation"
     ]
   },
   "h5": {
