@@ -18,6 +18,15 @@
       <text class="confirm-loading__text">正在分析对话内容...</text>
     </view>
 
+    <!-- 加载失败 -->
+    <view v-else-if="loadError" class="confirm-error">
+      <text class="confirm-error__icon">😅</text>
+      <text class="confirm-error__text">信息分析失败，请手动填写旅行信息</text>
+      <view class="confirm-error__btn" @tap="goBack">
+        <text>返回继续对话</text>
+      </view>
+    </view>
+
     <template v-else>
       <!-- 信息完整度 -->
       <view class="confirm-header">
@@ -102,6 +111,7 @@ import { extractInfo, confirmPlan, searchPlaces } from '@/api/index'
 const tripStore = useTripStore()
 const chatStore = useChatStore()
 const loading = ref(true)
+const loadError = ref(false)
 const editPopup = ref(null)
 const editingField = ref(null)
 const editValue = ref('')
@@ -143,7 +153,8 @@ onLoad(async (options) => {
       tripStore.updatePlan(result.trip_plan)
     }
   } catch (err) {
-    uni.showToast({ title: '信息分析失败', icon: 'none' })
+    loadError.value = true
+    uni.showToast({ title: '信息分析失败，请手动填写', icon: 'none' })
   } finally {
     loading.value = false
   }
@@ -253,6 +264,33 @@ function goBack() {
 .confirm-loading__text {
   font-size: 28rpx;
   color: #999999;
+}
+
+.confirm-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 160rpx 40rpx;
+}
+
+.confirm-error__icon {
+  font-size: 80rpx;
+  margin-bottom: 24rpx;
+}
+
+.confirm-error__text {
+  font-size: 28rpx;
+  color: #888888;
+  margin-bottom: 40rpx;
+  text-align: center;
+}
+
+.confirm-error__btn {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  color: #ffffff;
+  padding: 20rpx 48rpx;
+  border-radius: 40rpx;
+  font-size: 28rpx;
 }
 
 .confirm-header {
