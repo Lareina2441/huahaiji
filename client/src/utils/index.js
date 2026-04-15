@@ -5,14 +5,14 @@
 /**
  * 生成唯一 ID
  */
-export function generateId(): string {
+export function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).substr(2, 9)
 }
 
 /**
  * 格式化日期
  */
-export function formatDate(date: Date | string, format = 'YYYY-MM-DD'): string {
+export function formatDate(date, format = 'YYYY-MM-DD') {
   const d = new Date(date)
   const year = d.getFullYear()
   const month = String(d.getMonth() + 1).padStart(2, '0')
@@ -31,9 +31,9 @@ export function formatDate(date: Date | string, format = 'YYYY-MM-DD'): string {
 /**
  * 防抖函数
  */
-export function debounce(fn: Function, delay = 300): Function {
-  let timer: ReturnType<typeof setTimeout> | null = null
-  return function (this: any, ...args: any[]) {
+export function debounce(fn, delay = 300) {
+  let timer = null
+  return function (...args) {
     if (timer) clearTimeout(timer)
     timer = setTimeout(() => {
       fn.apply(this, args)
@@ -44,9 +44,9 @@ export function debounce(fn: Function, delay = 300): Function {
 /**
  * 节流函数
  */
-export function throttle(fn: Function, delay = 300): Function {
+export function throttle(fn, delay = 300) {
   let lastTime = 0
-  return function (this: any, ...args: any[]) {
+  return function (...args) {
     const now = Date.now()
     if (now - lastTime >= delay) {
       lastTime = now
@@ -58,7 +58,7 @@ export function throttle(fn: Function, delay = 300): Function {
 /**
  * 地点类型图标映射
  */
-export const placeTypeIcons: Record<string, string> = {
+export const placeTypeIcons = {
   attraction: '📍',
   restaurant: '🍽️',
   hotel: '🏨',
@@ -68,7 +68,7 @@ export const placeTypeIcons: Record<string, string> = {
 /**
  * 地点类型中文名映射
  */
-export const placeTypeLabels: Record<string, string> = {
+export const placeTypeLabels = {
   attraction: '景点',
   restaurant: '美食',
   hotel: '住宿',
@@ -78,7 +78,7 @@ export const placeTypeLabels: Record<string, string> = {
 /**
  * 评分转星级显示
  */
-export function ratingToStars(rating: number): string {
+export function ratingToStars(rating) {
   const full = Math.floor(rating)
   const half = rating % 1 >= 0.5 ? 1 : 0
   const empty = 5 - full - half
@@ -88,10 +88,7 @@ export function ratingToStars(rating: number): string {
 /**
  * 计算两点间距离（简化版，单位 km）
  */
-export function calcDistance(
-  lat1: number, lng1: number,
-  lat2: number, lng2: number,
-): number {
+export function calcDistance(lat1, lng1, lat2, lng2) {
   const R = 6371
   const dLat = ((lat2 - lat1) * Math.PI) / 180
   const dLng = ((lng2 - lng1) * Math.PI) / 180
@@ -108,7 +105,7 @@ export function calcDistance(
 /**
  * 打开微信内置地图导航
  */
-export function openNavigation(latitude: number, longitude: number, name: string) {
+export function openNavigation(latitude, longitude, name) {
   uni.openLocation({
     latitude,
     longitude,
@@ -121,7 +118,7 @@ export function openNavigation(latitude: number, longitude: number, name: string
  * 简单的 Markdown 转 HTML（小程序端）
  * 支持加粗、斜体、列表、换行
  */
-export function simpleMarkdown(text: string): string {
+export function simpleMarkdown(text) {
   if (!text) return ''
   return text
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')

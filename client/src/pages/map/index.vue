@@ -101,11 +101,11 @@ const tabs = computed(() => {
 /**
  * 获取筛选后的地点列表
  */
-function getFilteredPlaces(type: string) {
+function getFilteredPlaces(type) {
   const result = tripStore.searchResult
   if (!result) return []
 
-  let places: any[] = []
+  let places = []
   if (type === 'all' || type === 'attraction') {
     places.push(...(result.attractions || []))
   }
@@ -165,7 +165,7 @@ onLoad(async (options) => {
 /**
  * 切换筛选 Tab
  */
-function switchTab(key: string) {
+function switchTab(key) {
   activeTab.value = key
   selectedPlace.value = null
 }
@@ -224,7 +224,7 @@ function goToDetail() {
 /**
  * 获取类型标签
  */
-function getTypeLabel(type: string): string {
+function getTypeLabel(type) {
   return placeTypeLabels[type] || '其他'
 }
 

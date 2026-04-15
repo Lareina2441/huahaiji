@@ -90,7 +90,7 @@ function startNewTrip() {
 /**
  * 快速开始 - 带目的地跳转
  */
-function quickStart(destination: string) {
+function quickStart(destination) {
   uni.navigateTo({
     url: `/pages/chat/index?destination=${destination}`,
   })

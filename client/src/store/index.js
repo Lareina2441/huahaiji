@@ -6,7 +6,7 @@ import { defineStore } from 'pinia'
 // ==================== 用户 Store ====================
 export const useUserStore = defineStore('user', {
   state: () => ({
-    userInfo: null as any,
+    userInfo: null,
     token: '',
     userId: '',
   }),
@@ -16,12 +16,12 @@ export const useUserStore = defineStore('user', {
   },
 
   actions: {
-    setToken(token: string) {
+    setToken(token) {
       this.token = token
       uni.setStorageSync('token', token)
     },
 
-    setUserInfo(info: any) {
+    setUserInfo(info) {
       this.userInfo = info
       uni.setStorageSync('userInfo', JSON.stringify(info))
     },
@@ -48,8 +48,8 @@ export const useUserStore = defineStore('user', {
 // ==================== 聊天 Store ====================
 export const useChatStore = defineStore('chat', {
   state: () => ({
-    tripId: '' as string,
-    messages: [] as Array<{ role: string; content: string }>,
+    tripId: '',
+    messages: [],
     isLoading: false,
     isInfoComplete: false,
   }),
@@ -62,7 +62,7 @@ export const useChatStore = defineStore('chat', {
   },
 
   actions: {
-    addMessage(role: string, content: string) {
+    addMessage(role, content) {
       this.messages.push({ role, content })
     },
 
@@ -72,15 +72,15 @@ export const useChatStore = defineStore('chat', {
       this.isInfoComplete = false
     },
 
-    setTripId(tripId: string) {
+    setTripId(tripId) {
       this.tripId = tripId
     },
 
-    setLoading(loading: boolean) {
+    setLoading(loading) {
       this.isLoading = loading
     },
 
-    setInfoComplete(complete: boolean) {
+    setInfoComplete(complete) {
       this.isInfoComplete = complete
     },
   },
@@ -89,7 +89,7 @@ export const useChatStore = defineStore('chat', {
 // ==================== 旅行计划 Store ====================
 export const useTripStore = defineStore('trip', {
   state: () => ({
-    tripId: '' as string,
+    tripId: '',
     plan: {
       people_count: '',
       people_type: '',
@@ -103,8 +103,8 @@ export const useTripStore = defineStore('trip', {
       special_needs: '',
       interests: '',
       confidence: 0,
-    } as Record<string, any>,
-    searchResult: null as any,
+    },
+    searchResult: null,
     isSearching: false,
   }),
 
@@ -118,11 +118,11 @@ export const useTripStore = defineStore('trip', {
   },
 
   actions: {
-    setTripId(tripId: string) {
+    setTripId(tripId) {
       this.tripId = tripId
     },
 
-    updatePlan(plan: Record<string, any>) {
+    updatePlan(plan) {
       this.plan = { ...this.plan, ...plan }
     },
 
@@ -143,11 +143,11 @@ export const useTripStore = defineStore('trip', {
       }
     },
 
-    setSearchResult(result: any) {
+    setSearchResult(result) {
       this.searchResult = result
     },
 
-    setSearching(searching: boolean) {
+    setSearching(searching) {
       this.isSearching = searching
     },
   },

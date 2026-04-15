@@ -6,45 +6,31 @@
 // 后端 API 基础地址（开发环境）
 const BASE_URL = 'http://localhost:8000'
 
-// 请求拦截器类型
-type RequestInterceptor = (config: UniApp.RequestOptions) => UniApp.RequestOptions
-// 响应拦截器类型
-type ResponseInterceptor = (response: any) => any
-
 class Request {
-  private baseUrl: string
-  private requestInterceptors: RequestInterceptor[] = []
-  private responseInterceptors: ResponseInterceptor[] = []
-
-  constructor(baseUrl: string) {
+  constructor(baseUrl) {
     this.baseUrl = baseUrl
+    this.requestInterceptors = []
+    this.responseInterceptors = []
   }
 
   /**
    * 添加请求拦截器
    */
-  addRequestInterceptor(interceptor: RequestInterceptor) {
+  addRequestInterceptor(interceptor) {
     this.requestInterceptors.push(interceptor)
   }
 
   /**
    * 添加响应拦截器
    */
-  addResponseInterceptor(interceptor: ResponseInterceptor) {
+  addResponseInterceptor(interceptor) {
     this.responseInterceptors.push(interceptor)
   }
 
   /**
    * 核心请求方法
    */
-  request<T = any>(options: {
-    url: string
-    method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
-    data?: any
-    header?: Record<string, string>
-    showLoading?: boolean
-    showError?: boolean
-  }): Promise<T> {
+  request(options) {
     const {
       url,
       method = 'GET',
@@ -55,7 +41,7 @@ class Request {
     } = options
 
     // 执行请求拦截器
-    let config: UniApp.RequestOptions = {
+    let config = {
       url: this.baseUrl + url,
       method,
       data,
@@ -86,7 +72,7 @@ class Request {
 
           // 统一响应格式处理
           if (responseData.code === 0) {
-            resolve(responseData.data as T)
+            resolve(responseData.data)
           } else {
             if (showError) {
               uni.showToast({
@@ -118,41 +104,35 @@ class Request {
   /**
    * GET 请求
    */
-  get<T = any>(url: string, data?: any, options?: any): Promise<T> {
-    return this.request<T>({ url, method: 'GET', data, ...options })
+  get(url, data, options) {
+    return this.request({ url, method: 'GET', data, ...options })
   }
 
   /**
    * POST 请求
    */
-  post<T = any>(url: string, data?: any, options?: any): Promise<T> {
-    return this.request<T>({ url, method: 'POST', data, ...options })
+  post(url, data, options) {
+    return this.request({ url, method: 'POST', data, ...options })
   }
 
   /**
    * PUT 请求
    */
-  put<T = any>(url: string, data?: any, options?: any): Promise<T> {
-    return this.request<T>({ url, method: 'PUT', data, ...options })
+  put(url, data, options) {
+    return this.request({ url, method: 'PUT', data, ...options })
   }
 
   /**
    * DELETE 请求
    */
-  delete<T = any>(url: string, data?: any, options?: any): Promise<T> {
-    return this.request<T>({ url, method: 'DELETE', data, ...options })
+  delete(url, data, options) {
+    return this.request({ url, method: 'DELETE', data, ...options })
   }
 
   /**
    * SSE 流式请求（用于 AI 聊天）
    */
-  streamChat(
-    url: string,
-    data: any,
-    onMessage: (chunk: string) => void,
-    onComplete: () => void,
-    onError: (error: any) => void,
-  ) {
+  streamChat(url, data, onMessage, onComplete, onError) {
     const requestTask = uni.request({
       url: this.baseUrl + url,
       method: 'POST',
@@ -161,15 +141,13 @@ class Request {
         'Content-Type': 'application/json',
         'Accept': 'text/event-stream',
       },
-      enableChunked: true, // 开启分块传输
+      enableChunked: true,
       success: () => {},
       fail: (err) => {
         onError(err)
       },
     })
 
-    // 注意：微信小程序对 SSE 的支持有限
-    // 生产环境建议使用 WebSocket 替代
     return requestTask
   }
 }
