@@ -2,7 +2,7 @@
 花海纪 - 搜索路由（数据库版）
 处理旅行计划确认、搜索推荐相关接口
 """
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import (
@@ -22,7 +22,10 @@ class ConfirmPlanRequest(TripPlan):
 
 
 @router.post("/confirm-plan", response_model=ApiResponse)
-async def confirm_plan(request: ConfirmPlanRequest, db: AsyncSession = Depends(get_db)):
+async def confirm_plan(
+    request: ConfirmPlanRequest,
+    db: AsyncSession = Depends(get_db),
+):
     """
     保存/更新旅行计划（用户确认后的结构化数据）
     """

@@ -53,7 +53,7 @@ export function clearChatHistory(tripId) {
  * 确认旅行计划
  */
 export function confirmPlan(tripId, plan) {
-  return http.post(`/api/search/confirm-plan?trip_id=${tripId}`, plan)
+  return http.post('/api/search/confirm-plan', { ...plan, trip_id: tripId })
 }
 
 /**
