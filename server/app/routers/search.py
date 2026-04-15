@@ -16,28 +16,25 @@ from app.services.mapper import mapper_service
 router = APIRouter()
 
 
-class ConfirmPlanRequest(TripPlan):
-    """确认旅行计划请求"""
-    trip_id: str
-
-
 @router.post("/confirm-plan", response_model=ApiResponse)
 async def confirm_plan(
-    request: ConfirmPlanRequest,
+    request: TripPlan,
+    trip_id: str = Query(...),
     db: AsyncSession = Depends(get_db),
 ):
     """
     保存/更新旅行计划（用户确认后的结构化数据）
+    trip_id 通过 URL 查询参数传递，计划数据通过请求体传递
     """
-    trip = await crud.get_trip(db, request.trip_id)
+    trip = await crud.get_trip(db, trip_id)
     if not trip:
         raise HTTPException(status_code=404, detail="行程不存在")
 
-    plan_dict = request.model_dump(exclude={"trip_id"})
-    await crud.update_trip(db, request.trip_id, plan=plan_dict, status="confirmed")
+    plan_dict = request.model_dump()
+    await crud.update_trip(db, trip_id, plan=plan_dict, status="confirmed")
 
     return ApiResponse(
-        data={"trip_id": request.trip_id, "plan": plan_dict}
+        data={"trip_id": trip_id, "plan": plan_dict}
     )
 
 
