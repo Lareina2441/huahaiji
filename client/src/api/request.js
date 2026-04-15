@@ -4,7 +4,7 @@
  */
 
 // 后端 API 基础地址（开发环境）
-const BASE_URL = 'http://localhost:8000'
+const BASE_URL = 'http://47.113.177.25:8000'
 
 class Request {
   constructor(baseUrl) {
