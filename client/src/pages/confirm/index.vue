@@ -103,7 +103,7 @@ const tripStore = useTripStore()
 const chatStore = useChatStore()
 const loading = ref(true)
 const editPopup = ref(null)
-const editingField = ref<any>(null)
+const editingField = ref(null)
 const editValue = ref('')
 
 // 表单字段配置

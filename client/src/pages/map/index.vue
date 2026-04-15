@@ -80,7 +80,7 @@ import { placeTypeIcons, placeTypeLabels, openNavigation } from '@/utils/index'
 
 const tripStore = useTripStore()
 const activeTab = ref('all')
-const selectedPlace = ref<any>(null)
+const selectedPlace = ref(null)
 const mapScale = ref(12)
 
 // 地图中心点（默认成都）

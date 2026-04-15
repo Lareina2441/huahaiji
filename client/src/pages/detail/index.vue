@@ -162,7 +162,7 @@ import { addTripPlace } from '@/api/index'
 
 const tripStore = useTripStore()
 const detailPopup = ref(null)
-const selectedPlace = ref<any>(null)
+const selectedPlace = ref(null)
 const activeCategory = ref('all')
 
 const categoryTabs = [
