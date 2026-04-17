@@ -78,7 +78,13 @@ async def search_places(request: SearchRequest, db: AsyncSession = Depends(get_d
                         place.address = map_point.address
 
         # 4. 保存地点到数据库
-        places_data = [p.model_dump() for p in all_places]
+        places_data = []
+        for p in all_places:
+            d = p.model_dump()
+            # PlaceType 枚举转为字符串
+            if hasattr(d.get('type'), 'value'):
+                d['type'] = d['type'].value
+            places_data.append(d)
         await crud.batch_add_places(db, request.trip_id, places_data)
 
         # 5. 更新行程状态和概要
@@ -92,7 +98,10 @@ async def search_places(request: SearchRequest, db: AsyncSession = Depends(get_d
         return ApiResponse(data=result.model_dump())
 
     except Exception as e:
-        await crud.update_trip(db, request.trip_id, status="confirmed")
+        try:
+            await crud.update_trip(db, request.trip_id, status="confirmed")
+        except Exception:
+            pass
         raise HTTPException(status_code=500, detail=f"搜索失败: {str(e)}")
 
 
